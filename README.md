@@ -3,7 +3,7 @@ This repository intends to deliver the mobile SDK within a sample mobile applica
 
 The main functionality included in the SDK is the login and upload to the YSoft SafeQ using two main channels - End User Interface and the Mobile Integration Gateway.
 
-The mobile SDK is supplied in the *YSoft SafeQ SDK* folder. It includes *Login.swift* and *Upload.swift* classes comprising the core functionality of SDK and *Printjob.swift* struct representing the print jobs to be uploaded to the YSoft SafeQ. Their integration into the code is shown in the *LoginViewController.swift* and *UploadViewController.swift* classes. The application contains only basic UI elements as they will be chosen and modified by software engineers developing the mobile application with their custom assets. 
+The mobile SDK is supplied in the *YSoft SafeQ SDK* folder. It includes *Login.swift* and *Upload.swift* classes comprising the core functionality of SDK and *Printjob.swift* struct representing the print jobs to be uploaded to the YSoft SafeQ. Also, the *DeliveryEndpoint.swift* enum is present in the SDK. Their integration into the code is shown in the *LoginViewController.swift* and *UploadViewController.swift* classes. The application contains only basic UI elements as they will be chosen and modified by software engineers developing the mobile application with their custom assets. 
 
 For more detailed instructions on how to integrate the mobile SDK into your iOS application and utilize its functionality, see the bachelor's thesis... 
 
