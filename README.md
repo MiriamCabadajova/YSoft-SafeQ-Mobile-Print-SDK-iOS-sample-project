@@ -18,7 +18,7 @@ The application presents a login screen with input textfields:
     * MIG: https://server-with-mig:8050
  * The username and password textfields are filled by the YSoft SafeQ credentials
  
-After the successful login, the upload screen is presented. At the top, the *Add file* button adds an empty generic *test.txt* file to the table view. After adding file(s) to the tableview, the upload may be initiated after clicking the *Upload* button. If the upload of the files succeeds, they may be displayed in the end user interface at https://safeq6.ysoft.local/end-user/ui/. These print jobs may be released by authenticating at any printer with SafeQ installed.
+After the successful login, the upload screen is presented. At the top, the *Add file* button adds an empty generic *test.txt* file to the table view. After adding file(s) to the tableview, the upload may be initiated after clicking the *Upload* button. If the upload of the files succeeds, they may be displayed in the end user interface at https://server-with-eui/end-user/ui/. These print jobs may be released by authenticating at any printer with SafeQ installed.
 
 
 
