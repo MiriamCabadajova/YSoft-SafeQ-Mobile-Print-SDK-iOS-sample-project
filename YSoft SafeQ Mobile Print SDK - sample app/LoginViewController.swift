@@ -30,38 +30,28 @@ class LoginViewController: UIViewController, LoginDelegate {
         }
     }
     
-    func notifyUser(title: String, message: String, lineColor: String) {
+    func notifyUser(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
-    func presentLoginStoryboard() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "LoginScreen") as? UploadViewController
-        vc?.serverURI = self.serverURITextField.text!
-        let plainAuth = (usernameTextField.text! + ":" + self.passwordTextField.text!).data(using: String.Encoding.utf8)
-        if let base64 = plainAuth?.base64EncodedString(options: []) {
-            vc?.token = base64
-        }
-                
-        present(vc!, animated: true, completion: nil)
-        showLoginProgressBar(flag: false)
-        setAllButtons(flag: true)
-    }
-    
-    func presentUploadStoryboard(deliveryEndpoint: String) {
+    func presentUploadStoryboard(deliveryEndpoint: DeliveryEndpoint) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "UploadScreen") as? UploadViewController
-        vc?.serverURI = self.serverURITextField.text!
+        
         let plainAuth = (usernameTextField.text! + ":" + self.passwordTextField.text!).data(using: String.Encoding.utf8)
         if let base64 = plainAuth?.base64EncodedString(options: []) {
             vc?.token = base64
         }
+        
+        vc?.serverURI = self.serverURITextField.text!
         vc?.deliveryEndpoint = deliveryEndpoint
-        present(vc!, animated: true, completion: nil)
+        
         showLoginProgressBar(flag: false)
         setAllButtons(flag: true)
+        
+        present(vc!, animated: true, completion: nil)
     }
     
     func savePreferences() {

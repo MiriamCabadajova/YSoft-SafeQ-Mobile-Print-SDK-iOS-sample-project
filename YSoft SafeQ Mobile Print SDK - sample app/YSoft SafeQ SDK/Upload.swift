@@ -20,7 +20,7 @@ class Upload: NSObject, URLSessionDelegate, WKNavigationDelegate {
     private var serverURI: String
     private var printJobs: Array<PrintJob> = Array()
     private var token: String
-    private var deliveryEndpoint: String
+    private var deliveryEndpoint: DeliveryEndpoint
     
     private var uploadDelegate: UploadDelegate
     private var numberOfUploadedFiles = 0
@@ -29,7 +29,7 @@ class Upload: NSObject, URLSessionDelegate, WKNavigationDelegate {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    init(myServerURI: String, myPrintJobs: Array<PrintJob>, myDeliveryEndpoint: String, myToken: String, myUploadDelegate: UploadDelegate) {
+    init(myServerURI: String, myPrintJobs: Array<PrintJob>, myDeliveryEndpoint: DeliveryEndpoint, myToken: String, myUploadDelegate: UploadDelegate) {
         serverURI = myServerURI
         printJobs = myPrintJobs
         deliveryEndpoint = myDeliveryEndpoint
@@ -45,7 +45,7 @@ class Upload: NSObject, URLSessionDelegate, WKNavigationDelegate {
         uploadDelegate.isUploadBeingProcessed(flag: true)
         uploadDelegate.selectBtnIsVisible(flag: false)
         
-        if (deliveryEndpoint == "mig") {
+        if (deliveryEndpoint == .mig) {
             handleMigUpload()
             return
         }

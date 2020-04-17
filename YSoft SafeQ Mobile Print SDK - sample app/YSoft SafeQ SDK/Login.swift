@@ -10,9 +10,8 @@ import UIKit
 
 protocol LoginDelegate {
     func showLoginProgressBar(flag: Bool)
-    func notifyUser(title: String, message: String, lineColor: String)
-    func presentLoginStoryboard()
-    func presentUploadStoryboard(deliveryEndpoint: String)
+    func notifyUser(title: String, message: String)
+    func presentUploadStoryboard(deliveryEndpoint: DeliveryEndpoint)
     func savePreferences()
     func clearPreferences()
 }
@@ -24,7 +23,7 @@ class Login: NSObject, URLSessionDelegate {
     private var saveCredentials: Bool
     private var loginDelegate: LoginDelegate
     
-    private var deliveryEndpoint = "mig"
+    private var deliveryEndpoint: DeliveryEndpoint = .mig
     
     private var successfulLogin: Bool = false
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -48,12 +47,12 @@ class Login: NSObject, URLSessionDelegate {
         
         let baseUrl = serverURI
         if baseUrl.contains("end-user") {
-            deliveryEndpoint = "eui"
+            deliveryEndpoint = .eui
         } else {
-            deliveryEndpoint = "mig"
+            deliveryEndpoint = .mig
         }
         
-        if (deliveryEndpoint == "mig") {
+        if (deliveryEndpoint == .mig) {
             loginMig()
             return
         }
@@ -221,14 +220,14 @@ class Login: NSObject, URLSessionDelegate {
     
     func loginCompletionHandlerMig(data: Data?, response: URLResponse?, error: Error?) {
         if error != nil {
-            loginDelegate.notifyUser(title: "Login unsuccessful", message: "Unsupported URL", lineColor: "negativeRed")
+            loginDelegate.notifyUser(title: "Login unsuccessful", message: "Unsupported URL")
             loginDelegate.showLoginProgressBar(flag: false)
             return
         }
 
         if let httpResponse = response as? HTTPURLResponse {
             if (httpResponse.statusCode == 401) {
-                loginDelegate.notifyUser(title: "Login unsuccessful", message: "Invalid credentials", lineColor: "negativeRed")
+                loginDelegate.notifyUser(title: "Login unsuccessful", message: "Invalid credentials")
                 loginDelegate.showLoginProgressBar(flag: false)
                 return
             }
@@ -283,7 +282,7 @@ class Login: NSObject, URLSessionDelegate {
     
     func handleUnsuccessfulLogin(notificationMessage: String) {
         //if login fails and hide login screen toggle is enabled (saved credentials are not empty) -> replace "splash screen" with login ViewController
-        loginDelegate.notifyUser(title: "Login unsuccessful", message: notificationMessage, lineColor: "negativeRed")
+        loginDelegate.notifyUser(title: "Login unsuccessful", message: notificationMessage)
         loginDelegate.showLoginProgressBar(flag: false)
         successfulLogin = false
     }

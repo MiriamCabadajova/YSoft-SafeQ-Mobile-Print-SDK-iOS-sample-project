@@ -17,6 +17,7 @@
 		11E6578D24472E8800BC1BA9 /* PrintJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6578C24472E8800BC1BA9 /* PrintJob.swift */; };
 		11E6578F24472F2D00BC1BA9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6578E24472F2D00BC1BA9 /* LoginViewController.swift */; };
 		11E6579124472F4300BC1BA9 /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6579024472F4300BC1BA9 /* UploadViewController.swift */; };
+		11EAD3E42449A5590030C894 /* DeliveryEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EAD3E32449A5590030C894 /* DeliveryEndpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		11E6578C24472E8800BC1BA9 /* PrintJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintJob.swift; sourceTree = "<group>"; };
 		11E6578E24472F2D00BC1BA9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		11E6579024472F4300BC1BA9 /* UploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadViewController.swift; sourceTree = "<group>"; };
+		11EAD3E32449A5590030C894 /* DeliveryEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryEndpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				11E6578824472E1800BC1BA9 /* Login.swift */,
 				11E6578A24472E2100BC1BA9 /* Upload.swift */,
 				11E6578C24472E8800BC1BA9 /* PrintJob.swift */,
+				11EAD3E32449A5590030C894 /* DeliveryEndpoint.swift */,
 			);
 			path = "YSoft SafeQ SDK";
 			sourceTree = "<group>";
@@ -164,6 +167,7 @@
 				11E6577424472DF300BC1BA9 /* AppDelegate.swift in Sources */,
 				11E6577624472DF300BC1BA9 /* SceneDelegate.swift in Sources */,
 				11E6578924472E1800BC1BA9 /* Login.swift in Sources */,
+				11EAD3E42449A5590030C894 /* DeliveryEndpoint.swift in Sources */,
 				11E6578D24472E8800BC1BA9 /* PrintJob.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,7 +16,7 @@ class UploadViewController: UIViewController, UploadDelegate {
     
     var serverURI = ""
     var token = ""
-    var deliveryEndpoint = ""
+    var deliveryEndpoint: DeliveryEndpoint = .mig
     let CELL_REUSE_IDENTIFIER = "cellReuseID"
     
     private var printJobsArray: Array<PrintJob> = Array()
