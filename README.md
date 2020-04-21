@@ -7,7 +7,7 @@ The mobile SDK is supplied in the *YSoft SafeQ SDK* folder. It includes *Login.s
 
 For more detailed instructions on how to integrate the mobile SDK into your iOS application and utilize its functionality, see the bachelor's thesis... 
 
-## User Experience - sample application
+## User Experience
 The minimal required version of iOS is 12.2.
 
 You can launch the application by clicking the file with *.xcodeproj* suffix. 
