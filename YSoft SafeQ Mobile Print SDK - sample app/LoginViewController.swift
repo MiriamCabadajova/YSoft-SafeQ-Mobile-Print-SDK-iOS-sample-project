@@ -8,13 +8,15 @@
 
 import UIKit
 
-class LoginViewController: UIViewController, LoginDelegate {
+class LoginViewController: UIViewController, LoginDelegate, DiscoveryDelegate {
     
     @IBOutlet weak var serverURITextField: UITextField!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var discoveryButton: UIButton!
     
+    var discoverclass: Discovery?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,13 +69,48 @@ class LoginViewController: UIViewController, LoginDelegate {
     }
     
     func setAllButtons(flag: Bool) {
+        serverURITextField.isEnabled = flag
         usernameTextField.isEnabled = flag
         passwordTextField.isEnabled = flag
         loginButton.isEnabled = flag
+        discoveryButton.isEnabled = flag
+    }
+    
+    func setURL(url: String) {
+        self.serverURITextField.text = url;
+    }
+    
+    func promptUserForURLConfirmation(url: String) {
+        let alert = UIAlertController(title: "Do you want to use the following print server?", message: url, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Yes", style: .default) {
+            UIAlertAction in
+            self.setURL(url: url)
+            self.setAllButtons(flag: true)
+        }
+        
+        let cancelAction = UIAlertAction(title: "No", style: .cancel) {
+            UIAlertAction in
+            self.discoverclass?.verifyDomain()
+        }
+        
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func loginButtonClickHandler(_ sender: Any) {
         let loginClass = Login(myServerURI: serverURITextField.text ?? "", myLogin: usernameTextField.text ?? "", myPassword: passwordTextField.text ?? "", saveCredentialsChecked: false, myLoginDelegate: self)
         loginClass.handleLogin()
+    }
+    
+    @IBAction func discoveryButtonClickHandler(_ sender: Any) {
+        
+        discoverclass = Discovery(myServername: "", myDiscoveryDelegate: self)
+        if let serverUri = serverURITextField.text {
+            discoverclass?.serverName = serverUri
+        }
+        
+        discoverclass?.discover()
     }
 }

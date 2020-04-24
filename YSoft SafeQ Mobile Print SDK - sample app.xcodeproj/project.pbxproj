@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11509C392452D2A400420391 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11509C382452D2A400420391 /* Discovery.swift */; };
 		11E6577424472DF300BC1BA9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6577324472DF300BC1BA9 /* AppDelegate.swift */; };
 		11E6577624472DF300BC1BA9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6577524472DF300BC1BA9 /* SceneDelegate.swift */; };
 		11E6577B24472DF300BC1BA9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11E6577924472DF300BC1BA9 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11509C382452D2A400420391 /* Discovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
 		11E6577024472DF300BC1BA9 /* YSoft SafeQ Mobile Print SDK - sample app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "YSoft SafeQ Mobile Print SDK - sample app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E6577324472DF300BC1BA9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		11E6577524472DF300BC1BA9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 		11E6578724472DFF00BC1BA9 /* YSoft SafeQ SDK */ = {
 			isa = PBXGroup;
 			children = (
+				11509C382452D2A400420391 /* Discovery.swift */,
 				11E6578824472E1800BC1BA9 /* Login.swift */,
 				11E6578A24472E2100BC1BA9 /* Upload.swift */,
 				11E6578C24472E8800BC1BA9 /* PrintJob.swift */,
@@ -161,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11509C392452D2A400420391 /* Discovery.swift in Sources */,
 				11E6578F24472F2D00BC1BA9 /* LoginViewController.swift in Sources */,
 				11E6579124472F4300BC1BA9 /* UploadViewController.swift in Sources */,
 				11E6578B24472E2100BC1BA9 /* Upload.swift in Sources */,
