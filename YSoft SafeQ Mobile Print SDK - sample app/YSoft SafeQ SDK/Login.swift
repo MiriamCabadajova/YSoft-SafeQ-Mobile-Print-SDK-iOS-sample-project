@@ -9,8 +9,8 @@
 import UIKit
 
 protocol LoginDelegate {
-    func showLoginProgressBar(flag: Bool)
     func notifyUser(title: String, message: String)
+    func showLoginProgressBar(flag: Bool)
     func presentUploadStoryboard(deliveryEndpoint: DeliveryEndpoint)
     func savePreferences()
     func clearPreferences()

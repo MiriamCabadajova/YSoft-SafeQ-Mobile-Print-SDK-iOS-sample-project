@@ -10,9 +10,9 @@ import UIKit
 import WebKit
 
 protocol UploadDelegate {
+    func notifyUser(title: String, message: String)
     func isUploadBeingProcessed(flag: Bool)
     func selectBtnIsVisible(flag: Bool)
-    func notifyUser(title: String, message: String)
     func reloadTableview(printJobs: Array<PrintJob>)
 }
 
@@ -24,8 +24,6 @@ class Upload: NSObject, URLSessionDelegate, WKNavigationDelegate {
     
     private var uploadDelegate: UploadDelegate
     private var numberOfUploadedFiles = 0
-    
-    
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     

@@ -10,9 +10,9 @@ import UIKit
 import WebKit
 
 protocol DiscoveryDelegate {
+    func notifyUser(title: String, message: String)
     func setAllButtons(flag: Bool)
     func promptUserForURLConfirmation(url: String)
-    func notifyUser(title: String, message: String)
 }
 class Discovery: NSObject, URLSessionDelegate {
 
