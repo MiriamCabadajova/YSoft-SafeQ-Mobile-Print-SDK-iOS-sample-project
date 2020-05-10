@@ -9,12 +9,24 @@
 import UIKit
 import WebKit
 
+extension NetService {
+     func textRecordField(field: String) -> String?
+     {
+         guard
+             let data = self.txtRecordData(),
+             let field = NetService.dictionary(fromTXTRecord: data)[field]
+             else { return nil }
+
+         return String(data: field, encoding: String.Encoding.utf8)
+     }
+}
+
 protocol DiscoveryDelegate {
     func notifyUser(title: String, message: String)
     func setAllButtons(flag: Bool)
     func promptUserForURLConfirmation(url: String)
 }
-class Discovery: NSObject, URLSessionDelegate {
+class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetServiceDelegate  {
 
     private var domainsForVerification:[String] = []
     var currentUrl = ""
@@ -24,6 +36,53 @@ class Discovery: NSObject, URLSessionDelegate {
     init(myServername: String, myDiscoveryDelegate: DiscoveryDelegate) {
         serverName = myServername
         discoveryDelegate = myDiscoveryDelegate
+    }
+    
+    var services = [NetService] ()
+    
+    func netServiceDidResolveAddress (_ sender: NetService) {
+            
+        var hostname = [CChar] (repeating: 0, count: Int (NI_MAXHOST))
+        guard let data = sender.addresses? .first else {return}
+        do {
+            try data.withUnsafeBytes {(pointer: UnsafePointer<sockaddr>) in
+                guard getnameinfo (pointer, socklen_t (data.count),&hostname, socklen_t (hostname.count), nil, 0, NI_NUMERICHOST) == 0
+                    else {throw NSError (domain: "error_domain", code: 0, userInfo: .none)}
+                let address = String (cString: hostname)
+                
+                let printerPath = "http://\(address):631/" + (sender.textRecordField(field: "rp") ?? "")
+                guard let printerUrl = URL(string: printerPath)
+                    else {  return }
+                print(printerUrl)
+                _ = UIPrinter(url: printerUrl)
+                self.domainsForVerification.append(printerPath)
+
+            }
+        } catch {
+            print (error)
+        }
+        
+    }
+    
+    
+    func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
+        print(service)
+        services.append(service)
+        service.delegate = self
+        service.resolve(withTimeout: 5.0)
+    }
+
+    let serviceBrowser = NetServiceBrowser()
+    
+    func startDiscovery() {
+        services.removeAll()
+        serviceBrowser.delegate = self
+        serviceBrowser.schedule(in: .current, forMode: .default)
+        serviceBrowser.searchForServices(ofType: "_ipp._tcp.", inDomain:"local.")
+    }
+    
+    func netServiceDidStop(_ sender: NetService) {
+        print("search was stopped")
     }
     
     func getURL(suffix: String) -> URL {
@@ -36,16 +95,18 @@ class Discovery: NSObject, URLSessionDelegate {
     
     func discover () {
         discoveryDelegate.setAllButtons(flag: false)
+        domainsForVerification.removeAll()
+        startDiscovery()
         
-        self.domainsForVerification.removeAll()
-        
-        if (serverName != "") {
+        //delay because of service discovery
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            if (self.serverName != "") {
             var currentDomain = self.getURL(suffix: "").host
             
             // Text in the textfield is not valid, let's assume that it's a domain
             if (currentDomain == nil) {
                 // When user just enters random domain (not valid URL), try safeq6 subdomain first to speed up search
-                currentDomain = serverName
+                currentDomain = self.serverName
                 if ( (currentDomain?.contains("safeq6") ?? true) == false) {
                     self.domainsForVerification.append("https://safeq6." + currentDomain! + ":8050/")
                     self.domainsForVerification.append("https://safeq6." + currentDomain!)
@@ -77,12 +138,12 @@ class Discovery: NSObject, URLSessionDelegate {
         
         
         if (self.domainsForVerification.count == 0) {
-            discoveryDelegate.notifyUser(title: "Discovery", message: "No Print Server found")
-            discoveryDelegate.setAllButtons(flag: true)
+            self.discoveryDelegate.notifyUser(title: "Discovery", message: "No Print Server found")
+            self.discoveryDelegate.setAllButtons(flag: true)
             return
         }
-        
         self.verifyDomain();
+        }
     }
     
     func verifyDomain() {
@@ -156,6 +217,11 @@ class Discovery: NSObject, URLSessionDelegate {
         var url = httpResponse.url!.absoluteString
         let contents = String(data: data!, encoding: .ascii)
         guard let content = contents else { return  }
+        
+        if (url.contains("631")) {
+            discoveryDelegate.promptUserForURLConfirmation(url: url)
+            return
+        }
         
         if ((content.starts(with: "MIG")) || (content.starts(with: "AP hello"))) {
             discoveryDelegate.promptUserForURLConfirmation(url: url)
