@@ -9,7 +9,9 @@
 import UIKit
 import WebKit
 
+//Service discovery based on https://github.com/shsteven/Swift-Sample-Code/blob/master/Bonjour/Bonjour/BonjourDiscovery.swift
 extension NetService {
+    //get the printer URL
      func textRecordField(field: String) -> String?
      {
          guard
