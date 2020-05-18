@@ -14,7 +14,7 @@ You can launch the application by clicking the file with *.xcodeproj* suffix.
 
 The application presents a login screen with input textfields:
  * The server textfield is filled by the address of the desired endpoint:
-    * The discovery button discovers local printers, and, if the textfield is filled by the domain (e.g. ysoft.local), the rest of the URL is discovered by the application. The discovery of local printers does not work on an emulator, therefore, a real device is required for testing of this feature. 
+    * The discovery button discovers local printers, and, if the textfield is filled by the domain (e.g. ysoft.local), the rest of the URL is discovered by the application.  
     * Otherwise, one of the URLs can be entered:
       * EUI/MPS: https://server-with-eui:9443/end-user/ui/
       * MIG: https://server-with-mig:8050
