@@ -22,8 +22,8 @@ The application presents a login screen with input textfields:
  
 After the successful login, the upload screen is presented. At the top, the *Add file* button adds an empty generic *test.txt* file to the table view. After adding file(s) to the tableview, the upload may be initiated after clicking the *Upload* button. If the upload of the files succeeds, they may be displayed in the end user interface at https://server-with-eui/end-user/ui/. These print jobs may be released by authenticating at any printer with SafeQ installed.
 
-
-
+## Developer Experience
+For detailed information on the development with the mobile SDK see the *YSoft SafeQ SDK* folder.
 
 
 
