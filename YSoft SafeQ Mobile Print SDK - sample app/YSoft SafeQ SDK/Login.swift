@@ -17,20 +17,12 @@ protocol LoginDelegate {
 }
 
 class Login: NSObject, URLSessionDelegate {
-    var serverURI: String
-    var login: String
-    var password: String
+    private var serverURI: String
+    private var login: String
+    private var password: String
     private var saveCredentials: Bool
     private var loginDelegate: LoginDelegate
-    
     private var deliveryEndpoint: DeliveryEndpoint = .mig
-    
-    private var successfulLogin: Bool = false
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
-    public func loginWasSuccessful() -> Bool {
-        return successfulLogin
-    }
     
     init(myServerURI: String, myLogin: String, myPassword: String, saveCredentialsChecked: Bool, myLoginDelegate: LoginDelegate) {
         serverURI = myServerURI
@@ -251,7 +243,6 @@ class Login: NSObject, URLSessionDelegate {
             handleUnsuccessfulLogin(notificationMessage: "Invalid Credentials")
             return
         }
-        successfulLogin = true
         //if login succeeds and save credentials checkbox is checked, save preferences
         if saveCredentials {
             loginDelegate.savePreferences()
@@ -284,7 +275,6 @@ class Login: NSObject, URLSessionDelegate {
         //if login fails and hide login screen toggle is enabled (saved credentials are not empty) -> replace "splash screen" with login ViewController
         loginDelegate.notifyUser(title: "Login unsuccessful", message: notificationMessage)
         loginDelegate.showLoginProgressBar(flag: false)
-        successfulLogin = false
     }
 }
 

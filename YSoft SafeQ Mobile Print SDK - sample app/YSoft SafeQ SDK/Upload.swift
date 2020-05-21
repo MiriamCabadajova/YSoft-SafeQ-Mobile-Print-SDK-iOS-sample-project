@@ -25,7 +25,6 @@ class Upload: NSObject, URLSessionDelegate, WKNavigationDelegate {
     private var uploadDelegate: UploadDelegate
     private var numberOfUploadedFiles = 0
     
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     init(myServerURI: String, myPrintJobs: Array<PrintJob>, myDeliveryEndpoint: DeliveryEndpoint, myToken: String, myUploadDelegate: UploadDelegate) {
         serverURI = myServerURI
@@ -96,9 +95,8 @@ extension Upload {
     private func getTokenForUpload() {
         let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue:OperationQueue.main)
-        
         let url = self.getURL(suffix: "upload-job")
-        //let url = URL(string: "https://demo6.ysoft.com:9443/end-user/ui/login")!
+        
         var pageRequest = URLRequest(url: url)
         pageRequest.httpShouldHandleCookies = true
         pageRequest.timeoutInterval = 5
@@ -108,7 +106,6 @@ extension Upload {
     
     
     private func getTokenForUploadCompletionHandler(responseData: Data?, response: URLResponse?, error: Error?) {
-        
         if (response == nil || responseData == nil) {
             uploadDelegate.notifyUser(title: "Upload failed", message: "Check your internet connection")
             return
@@ -183,8 +180,6 @@ extension Upload {
         urlRequest.httpMethod = "POST"
         urlRequest.httpShouldHandleCookies = true
         urlRequest.setValue(token, forHTTPHeaderField: "X-CSRF-TOKEN")
-        
-        
 
         // Set Content-Type Header to multipart/form-data, this is equivalent to submitting form data with file upload in a web browser
         // And the boundary is also set here
@@ -341,8 +336,8 @@ extension Upload {
             session.uploadTask(with: urlRequest, from: data, completionHandler: self.uploadCompletionHandler).resume()
 
         } catch {
-                  print(error)
-                  return false
+              print(error)
+              return false
         }
         
         numberOfUploadedFiles += 1

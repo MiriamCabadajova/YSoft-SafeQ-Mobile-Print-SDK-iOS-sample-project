@@ -12,7 +12,4 @@ struct PrintJob {
     var url: URL
     var isBwSelected = false
     var isDuplexSelected = false
-    
-    var tmpIsBwSelected = false
-    var tmpIsDuplexSelected = false
 }

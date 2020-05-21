@@ -13,18 +13,16 @@ protocol UploadViewControllerDelegate {
 }
 
 class UploadViewController: UIViewController, UploadDelegate {
-    
     var serverURI = ""
     var token = ""
     var deliveryEndpoint: DeliveryEndpoint = .mig
     let CELL_REUSE_IDENTIFIER = "cellReuseID"
-    
+    var counter = 1
     private var printJobsArray: Array<PrintJob> = Array()
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addFileButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
-    
     
     @IBAction func addButtonHandler(_ sender: Any) {
         let file = createGenericFile()
@@ -34,15 +32,14 @@ class UploadViewController: UIViewController, UploadDelegate {
     
     @IBAction func uploadButtonHandler(_ sender: Any) {
         let uploadClass = Upload(myServerURI: serverURI, myPrintJobs: printJobsArray, myDeliveryEndpoint: deliveryEndpoint, myToken: token, myUploadDelegate: self)
-        
-            uploadClass.handleUpload()
+        uploadClass.handleUpload()
     }
     
     func createGenericFile() -> String {
         let homeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-         
         let fileManager = FileManager.default
-        let newFile = homeURL.appendingPathComponent("test.txt").path
+        let newFile = homeURL.appendingPathComponent("test_file_\(counter).txt").path
+        counter += 1
          
         if(!fileManager.fileExists(atPath:newFile)){
            fileManager.createFile(atPath: newFile, contents: nil, attributes: nil)
@@ -57,7 +54,6 @@ class UploadViewController: UIViewController, UploadDelegate {
     }
     
     func isUploadBeingProcessed(flag: Bool) {
-
         if flag {
             tableView.isUserInteractionEnabled = false
             addFileButton.isEnabled = false
@@ -69,7 +65,6 @@ class UploadViewController: UIViewController, UploadDelegate {
             uploadButton.setTitle("Upload", for: .normal)
         }
     }
-    
     
     func selectBtnIsVisible(flag: Bool) {
         // enable add file btn if needed
@@ -107,10 +102,7 @@ extension UploadViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CELL_REUSE_IDENTIFIER, for: indexPath) as UITableViewCell
-        cell.detailTextLabel?.text = "hello world"
-        cell.detailTextLabel?.text = printJobsArray[indexPath.item].url.lastPathComponent
+        cell.textLabel?.text = printJobsArray[indexPath.item].url.lastPathComponent
         return cell
     }
-    
-    
 }

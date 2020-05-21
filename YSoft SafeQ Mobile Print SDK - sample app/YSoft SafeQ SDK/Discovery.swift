@@ -31,8 +31,8 @@ protocol DiscoveryDelegate {
 class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetServiceDelegate  {
 
     private var domainsForVerification:[String] = []
-    var currentUrl = ""
-    var discoveryDelegate: DiscoveryDelegate
+    private var currentUrl = ""
+    private var discoveryDelegate: DiscoveryDelegate
     var serverName: String
     
     init(myServername: String, myDiscoveryDelegate: DiscoveryDelegate) {
@@ -109,31 +109,17 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
             if (currentDomain == nil) {
                 // When user just enters random domain (not valid URL), try safeq6 subdomain first to speed up search
                 currentDomain = self.serverName
-                if ( (currentDomain?.contains("safeq6") ?? true) == false) {
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + ":8050/")
-                    self.domainsForVerification.append("https://safeq6." + currentDomain!)
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + "/end-user/ui/")
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + ":9443/end-user/ui/")
+                if ( (currentDomain?.contains("safeq6")) == false) {
+                    self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
                 }
-
-                self.domainsForVerification.append("https://" + currentDomain! + ":8050/")
-                self.domainsForVerification.append("https://" + currentDomain!)
-                self.domainsForVerification.append("https://" + currentDomain! + "/end-user/ui/")
-                self.domainsForVerification.append("https://" + currentDomain! + ":9443/end-user/ui/")
+                self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
                 
             } else {
                 // When user enters valid URL, try the domain first then try safeq6 subdomain
-                self.domainsForVerification.append("https://" + currentDomain! + ":8050/")
-                self.domainsForVerification.append("https://" + currentDomain!)
-                self.domainsForVerification.append("https://" + currentDomain! + "/end-user/ui/")
-                self.domainsForVerification.append("https://" + currentDomain! + ":9443/end-user/ui/")
-                
+                self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
 
-                if ( (currentDomain?.contains("safeq6") ?? true) == false) {
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + ":8050/")
-                    self.domainsForVerification.append("https://safeq6." + currentDomain!)
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + "/end-user/ui/")
-                    self.domainsForVerification.append("https://safeq6." + currentDomain! + ":9443/end-user/ui/")
+                if ( (currentDomain?.contains("safeq6")) == false) {
+                    self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
                 }
             }
         }
@@ -144,8 +130,22 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
             self.discoveryDelegate.setAllButtons(flag: true)
             return
         }
+            
         self.verifyDomain();
         }
+    }
+    
+    private func addDomainsForVerification(prefix: String, enteredUrl: String) {
+        var newPrefix = ""
+        if (prefix != "") {
+            newPrefix = "\(prefix)."
+        }
+        
+        domainsForVerification.append("https://\(newPrefix)\(enteredUrl):8050")
+        domainsForVerification.append("https://\(newPrefix)\(enteredUrl)")
+        domainsForVerification.append("https://\(newPrefix)\(enteredUrl)/end-user/ui/")
+        domainsForVerification.append("https://\(newPrefix)\(enteredUrl):9443/end-user/ui/")
+
     }
     
     func verifyDomain() {

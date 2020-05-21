@@ -20,7 +20,6 @@ class LoginViewController: UIViewController, LoginDelegate, DiscoveryDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        discoverclass = Discovery(myServername: "", myDiscoveryDelegate: self)
     }
     
     func showLoginProgressBar(flag: Bool) {
@@ -70,17 +69,19 @@ class LoginViewController: UIViewController, LoginDelegate, DiscoveryDelegate {
     }
     
     func setAllButtons(flag: Bool) {
+        if loginButton.titleLabel?.text == "Login" && !flag {
+            print("discovering")
+            discoveryButton.titleLabel?.text = "Discovering ..."
+        } else {
+            discoveryButton.titleLabel?.text = "Discover"
+        }
+        
         serverURITextField.isEnabled = flag
         usernameTextField.isEnabled = flag
         passwordTextField.isEnabled = flag
         loginButton.isEnabled = flag
         discoveryButton.isEnabled = flag
         
-        if loginButton.titleLabel?.text == "Login" && !flag {
-            discoveryButton.titleLabel?.text = "Discovering ..."
-        } else {
-            discoveryButton.titleLabel?.text = "Discover"
-        }
     }
     
     func setURL(url: String) {
@@ -112,12 +113,10 @@ class LoginViewController: UIViewController, LoginDelegate, DiscoveryDelegate {
     }
     
     @IBAction func discoveryButtonClickHandler(_ sender: Any) {
-        
         discoverclass = Discovery(myServername: "", myDiscoveryDelegate: self)
         if let serverUri = serverURITextField.text {
             discoverclass?.serverName = serverUri
         }
-        
         discoverclass?.discover()
     }
 }
