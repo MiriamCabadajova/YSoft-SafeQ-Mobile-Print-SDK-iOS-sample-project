@@ -34,13 +34,12 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
     private var currentUrl = ""
     private var discoveryDelegate: DiscoveryDelegate
     var serverName: String
+    var services = [NetService] ()
     
     init(myServername: String, myDiscoveryDelegate: DiscoveryDelegate) {
         serverName = myServername
         discoveryDelegate = myDiscoveryDelegate
     }
-    
-    var services = [NetService] ()
     
     func netServiceDidResolveAddress (_ sender: NetService) {
             
@@ -87,10 +86,6 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
         print("search was stopped")
     }
     
-    func getURL(suffix: String) -> URL {
-        return URL(string: serverName + suffix)!
-    }
-    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(URLSession.AuthChallengeDisposition.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!) )
     }
@@ -98,40 +93,46 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
     func discover () {
         discoveryDelegate.setAllButtons(flag: false)
         domainsForVerification.removeAll()
-        startDiscovery()
         
+        startDiscovery()
         //delay because of service discovery
         DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
             if (self.serverName != "") {
-            var currentDomain = self.getURL(suffix: "").host
-            
-            // Text in the textfield is not valid, let's assume that it's a domain
-            if (currentDomain == nil) {
-                // When user just enters random domain (not valid URL), try safeq6 subdomain first to speed up search
-                currentDomain = self.serverName
-                if ( (currentDomain?.contains("safeq6")) == false) {
-                    self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
-                }
-                self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
                 
-            } else {
-                // When user enters valid URL, try the domain first then try safeq6 subdomain
-                self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
+                guard let returnUrl = URL(string: self.serverName) else {
+                    self.discoveryDelegate.notifyUser(title: "Discovery failed", message: "Empty input string detected")
+                    self.discoveryDelegate.setAllButtons(flag: true)
+                    return
+                }
+                
+                var currentDomain = returnUrl.host
+                // Text in the textfield is not valid, let's assume that it's a domain
+                if (currentDomain == nil) {
+                    // When user just enters random domain (not valid URL), try safeq6 subdomain first to speed up search
+                    currentDomain = self.serverName
+                    if ( (currentDomain?.contains("safeq6")) == false) {
+                        self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
+                    }
+                    self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
+                    
+                } else {
+                    // When user enters valid URL, try the domain first then try safeq6 subdomain
+                    self.addDomainsForVerification(prefix: "", enteredUrl: currentDomain ?? "")
 
-                if ( (currentDomain?.contains("safeq6")) == false) {
-                    self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
+                    if ( (currentDomain?.contains("safeq6")) == false) {
+                        self.addDomainsForVerification(prefix: "safeq6", enteredUrl: currentDomain ?? "")
+                    }
                 }
             }
-        }
         
         
-        if (self.domainsForVerification.count == 0) {
-            self.discoveryDelegate.notifyUser(title: "Discovery", message: "No Print Server found")
-            self.discoveryDelegate.setAllButtons(flag: true)
-            return
-        }
-            
-        self.verifyDomain();
+            if (self.domainsForVerification.count == 0) {
+                self.discoveryDelegate.notifyUser(title: "Discovery", message: "No Print Server found")
+                self.discoveryDelegate.setAllButtons(flag: true)
+                return
+            }
+                
+            self.verifyDomain()
         }
     }
     
@@ -160,8 +161,6 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
         self.findServerInDomain(urlString: domain)
     }
     
-    
-    
     private func findServerInDomain(urlString: String) {
         let url = URL(string: urlString)
         var pageRequest = URLRequest(url: url!)
@@ -183,7 +182,6 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
     }
     
     func matches(for regex: String, in text: String) -> [String] {
-        
         do {
             let regex = try NSRegularExpression(pattern: regex)
             let nsString = text as NSString
@@ -196,7 +194,6 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
     }
     
     private func serverDiscoveryCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
-
         if (response == nil) {
             // Server not reachable
             self.serverDiscoveryFailed()
@@ -232,12 +229,11 @@ class Discovery: NSObject, URLSessionDelegate, NetServiceBrowserDelegate, NetSer
         
         let matched = self.matches(for: "_csrf\".*", in: content)
         if (matched.count == 0) {
-            // Incompatible server interface, no token found. It's not a EUI
+            // Incompatible server interface, no token found - it's not a EUI
             self.serverDiscoveryFailed()
             return
         }
         
-        // Remove trailing login
         if (url.contains("/login")) {
             url.removeLast(5)
         }
